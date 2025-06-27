@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for tilt-badgr-server-rough-dust-9311 on 2025-06-27T14:57:08+01:00
+# fly.toml app configuration file generated for tilt-badgr-server-little-snowflake-475 on 2025-06-27T15:05:23+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'tilt-badgr-server-rough-dust-9311'
+app = 'tilt-badgr-server-little-snowflake-475'
 primary_region = 'lhr'
 
 [experimental]

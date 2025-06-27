@@ -8,7 +8,7 @@ COPY manage.py                     /badgr_server
 COPY .docker/etc/uwsgi.ini         /badgr_server
 COPY .docker/etc/wsgi.py           /badgr_server
 COPY apps                          /badgr_server/apps
-COPY .docker/etc/settings_local.py /badgr_server/apps/mainsite/
+COPY .docker/etc/settings_local.py /badgr_server/apps/mainsite/settings_local.py
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y default-libmysqlclient-dev \
