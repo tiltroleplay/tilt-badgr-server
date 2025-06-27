@@ -1,0 +1,19 @@
+app = "badgr-server"   # you can change this to a unique app name
+
+primary_region = "lhr" # or your preferred region
+
+[build]
+  dockerfile = ".docker/Dockerfile.api"
+
+[env]
+  DJANGO_SETTINGS_MODULE = "badgr.settings.production"
+  DATABASE_URL = "postgres://ucjwf0gypzeyl:121jz##1@1#^@35.214.186.42:5432/dbyherfdojaere"
+  REDIS_URL = "redis://default:8f315b7343ba46b6ade49832e9d9626e@fly-blue-snowflake-5898.upstash.io:6379"
+  SECRET_KEY = "aZ1D-vxFQUu2f3JUZmhh_Ayd25mHovHDq_SaxAbI-7ALm23uvgr12f"
+
+[deploy]
+  release_command = "python manage.py migrate"
+
+[experimental]
+  allowed_public_ports = [80]
+  auto_rollback = true
