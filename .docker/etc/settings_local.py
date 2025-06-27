@@ -78,7 +78,7 @@ CELERY_ALWAYS_EAGER = False
 #
 ###
 HTTP_ORIGIN = 'https://tiltroleplay.com'
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://tilt-badgr-server.fly.dev']
 STATIC_URL = HTTP_ORIGIN + '/static/'
 
 # Optionally restrict issuer creation to accounts that have the 'issuer.add_issuer' permission
