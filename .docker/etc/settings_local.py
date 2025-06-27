@@ -1,9 +1,10 @@
-# settings_local.py is for all instance specific settings
+# settings_local.py for Fly.io deployment
 
-import random
-import string
+import os
 from .settings import *
-from mainsite import TOP_DIR
+
+# Remove or comment out import that might fail during build
+# from mainsite import TOP_DIR
 
 DEBUG = False
 DEBUG_ERRORS = DEBUG
@@ -13,92 +14,57 @@ DEBUG_MEDIA = DEBUG
 TIME_ZONE = 'America/Los_Angeles'
 LANGUAGE_CODE = 'en-gb'
 
-
-##
-#
-# Database Configuration
-#
-##
+# Database config from environment variables with defaults as fallback
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'dbyherfdojaere',                      # Or path to database file if using sqlite3.
-        'USER': 'ucjwf0gypzeyl',                      # Not used with sqlite3.
-        'PASSWORD': '121jz##1@1#^',                  # Not used with sqlite3.
-        'HOST': 'tiltroleplay.com',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
-        'OPTIONS': {
-#            "SET character_set_connection=utf8mb3, collation_connection=utf8_unicode_ci",  # Uncomment when using MySQL to ensure consistency across servers
-        },
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'dbyherfdojaere'),
+        'USER': os.getenv('POSTGRES_USER', 'ucjwf0gypzeyl'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'arandomstringthaticanuserforpostgresqlproduction'),
+        'HOST': os.getenv('POSTGRES_HOST', 'tiltroleplay.com'),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        'OPTIONS': {},
     }
 }
 
-###
-#
-# CACHE
-#
-###
+# Cache settings, use Redis URL from env if possible
 CACHES = {
-     'default': {
-         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-         'LOCATION': 'memcached:11211',
-         'KEY_FUNCTION': 'mainsite.utils.filter_cache_key'
-     }
- }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': os.getenv('MEMCACHED_LOCATION', 'memcached:11211'),
+        'KEY_FUNCTION': 'mainsite.utils.filter_cache_key',
+    }
+}
 
-
-
-###
-#
-# Email Configuration
-#
-###
-DEFAULT_FROM_EMAIL = 'badges@tiltroleplay.com'  # e.g. "noreply@example.com"
+# Email config
+DEFAULT_FROM_EMAIL = 'badges@tiltroleplay.com'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
-###
-#
-# Celery Asynchronous Task Processing (Optional)
-#
-###
-# CELERY_RESULT_BACKEND = None
-# Run celery tasks in same thread as webserver (True means that asynchronous processing is OFF)
-# CELERY_ALWAYS_EAGER = True
-import os
-
-CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+# Celery config, use Redis URL env var or fallback
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 CELERY_ALWAYS_EAGER = False
 
-###
-#
-# Application Options Configuration
-#
-###
+# Application options
 HTTP_ORIGIN = 'https://tiltroleplay.com'
-ALLOWED_HOSTS = ['https://tilt-badgr-server.fly.dev']
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST', 'tilt-badgr-server.fly.dev')]
 STATIC_URL = HTTP_ORIGIN + '/static/'
 
-# Optionally restrict issuer creation to accounts that have the 'issuer.add_issuer' permission
 BADGR_APPROVED_ISSUERS_ONLY = False
-
-# Automatically send an email the first time that recipient identifier (email type) has been used on the system.
 GDPR_COMPLIANCE_NOTIFY_ON_FIRST_AWARD = True
 
-SECRET_KEY = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
-UNSUBSCRIBE_KEY = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
-UNSUBSCRIBE_SECRET_KEY = str(SECRET_KEY)
+# Secret keys — load from env, fallback to fixed string (set strong value in production!)
+SECRET_KEY = os.getenv('SECRET_KEY', 'replace-this-with-a-secure-key')
+UNSUBSCRIBE_KEY = os.getenv('UNSUBSCRIBE_KEY', SECRET_KEY)
+UNSUBSCRIBE_SECRET_KEY = os.getenv('UNSUBSCRIBE_SECRET_KEY', SECRET_KEY)
 
+# Logging (adjusted, commented out import TOP_DIR)
+import os
 
-###
-#
-# Logging
-#
-###
-LOGS_DIR = os.path.join(TOP_DIR, 'logs')
+LOGS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'logs')
 if not os.path.exists(LOGS_DIR):
     os.makedirs(LOGS_DIR)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -106,16 +72,14 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'filters': [],
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'django.utils.log.AdminEmailHandler',
         },
-
-        # badgr events log to disk by default
         'badgr_events': {
             'level': 'INFO',
             'formatter': 'json',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGS_DIR, 'badgr_events.log')
-        }
+            'filename': os.path.join(LOGS_DIR, 'badgr_events.log'),
+        },
     },
     'loggers': {
         'django.request': {
@@ -123,25 +87,20 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-
-        # Badgr.Events emits all badge related activity
         'Badgr.Events': {
             'handlers': ['badgr_events'],
             'level': 'INFO',
             'propagate': False,
-
-        }
-
+        },
     },
     'formatters': {
         'default': {
-            'format': '%(asctime)s %(levelname)s %(module)s %(message)s'
+            'format': '%(asctime)s %(levelname)s %(module)s %(message)s',
         },
         'json': {
             '()': 'mainsite.formatters.JsonFormatter',
             'format': '%(asctime)s',
             'datefmt': '%Y-%m-%dT%H:%M:%S%z',
-        }
+        },
     },
 }
-

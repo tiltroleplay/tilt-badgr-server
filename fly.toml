@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for tilt-badgr-server-little-snowflake-475 on 2025-06-27T15:05:23+01:00
+# fly.toml app configuration file generated for tilt-badgr-server-dark-breeze-6009 on 2025-06-27T15:12:21+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'tilt-badgr-server-little-snowflake-475'
+app = 'tilt-badgr-server-dark-breeze-6009'
 primary_region = 'lhr'
 
 [experimental]
