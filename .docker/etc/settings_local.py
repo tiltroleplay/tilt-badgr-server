@@ -59,7 +59,6 @@ UNSUBSCRIBE_KEY = os.getenv('UNSUBSCRIBE_KEY', SECRET_KEY)
 UNSUBSCRIBE_SECRET_KEY = os.getenv('UNSUBSCRIBE_SECRET_KEY', SECRET_KEY)
 
 # Logging (adjusted, commented out import TOP_DIR)
-import os
 
 LOGS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'logs')
 if not os.path.exists(LOGS_DIR):
