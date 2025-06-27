@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for tilt-badgr-server-bitter-dew-8781 on 2025-06-27T14:45:39+01:00
+# fly.toml app configuration file generated for tilt-badgr-server-snowy-grass-1465 on 2025-06-27T14:50:00+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'tilt-badgr-server-bitter-dew-8781'
+app = 'tilt-badgr-server-snowy-grass-1465'
 primary_region = 'lhr'
 
 [experimental]
