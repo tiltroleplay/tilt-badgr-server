@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for tilt-badgr-server-autumn-sea-2673 on 2025-06-27T15:31:56+01:00
+# fly.toml app configuration file generated for tilt-badgr-server-solitary-dew-3720 on 2025-06-27T15:45:00+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'tilt-badgr-server-autumn-sea-2673'
+app = 'tilt-badgr-server-solitary-dew-3720'
 primary_region = 'lhr'
 
 [experimental]
